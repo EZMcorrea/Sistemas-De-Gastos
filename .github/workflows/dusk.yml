@@ -1,0 +1,49 @@
+name: Dusk Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  dusk:
+    runs-on: ubuntu-latest
+    services: {}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v4
+        with:
+          php-version: '8.2'
+          extensions: mbstring, bcmath, pdo_sqlite
+
+      - name: Install system deps (chromium)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver unzip
+
+      - name: Cache composer
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+
+      - name: Install composer deps
+        run: composer install --no-progress --no-suggest --prefer-dist --no-interaction
+
+      - name: Setup .env and APP_KEY
+        run: |
+          cp .env.example .env
+          php -r "file_exists('database/database.sqlite') || touch('database/database.sqlite');"
+          php artisan key:generate --ansi
+
+      - name: Prepare DB
+        run: php artisan migrate --seed --force
+
+      - name: Run Dusk (headless)
+        env:
+          DUSK_CHROME_DRIVER_PATH: /usr/bin/chromedriver
+        run: |
+          php artisan dusk --headless --disable-tty
