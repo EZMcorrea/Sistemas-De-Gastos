@@ -93,3 +93,24 @@ php artisan test
 # iniciar servidor em porta alternativa
 php artisan serve --port=8081
 ```
+
+## Docker (desenvolvimento)
+
+Para facilitar execução local e testes, há um `Dockerfile` e `docker-compose.yml` de desenvolvimento.
+
+1. Build e subir contêineres:
+
+```bash
+docker-compose up --build -d
+```
+
+2. O container da aplicação expõe a porta `8000` (acessível em http://127.0.0.1:8000). O serviço cria o banco Postgres (`db`) com usuário `laravel` / senha `secret` e executa migrations/seeders automaticamente durante o startup.
+
+3. Parar e remover containers:
+
+```bash
+docker-compose down -v
+```
+
+Observação: o `docker-compose` foi pensado para desenvolvimento rápido; ajuste variáveis de ambiente em `docker-compose.yml` conforme necessário para produção.
+
