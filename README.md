@@ -72,7 +72,23 @@ php artisan test
      ```
 
   2) Script auxiliar (linha de comando):
-     - Se preferir, eu posso adicionar um script para baixar automaticamente o ChromeDriver compatível (mas o download pode falhar se o CA local estiver quebrado). Se quiser, eu posso tentar executar o download aqui ou adicionar o script para você executar localmente.
+       - Se preferir, há scripts auxiliares incluídos em `scripts/` para baixar e extrair o Chrome for Testing archive:
+          - `scripts/download_chromedriver.sh` (Linux/macOS)
+          - `scripts/download_chromedriver.ps1` (Windows PowerShell)
+
+       - Uso (exemplo):
+
+          Bash:
+          ```bash
+          bash scripts/download_chromedriver.sh "<download_url>" tools/chromedriver
+          ```
+
+          PowerShell:
+          ```powershell
+          .\scripts\download_chromedriver.ps1 -Url "<download_url>" -OutDir "tools\chromedriver"
+          ```
+
+       - Após a extração, defina `DUSK_CHROME_DRIVER_PATH` no `.env` apontando para o binário `chromedriver` encontrado.
 
   3) Corrigir CA/SSL: se preferir o `php artisan dusk:install` baixar automaticamente, corrija o CA do sistema para permitir conexões TLS válidas — isso depende do seu SO.
 
