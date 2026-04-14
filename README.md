@@ -49,28 +49,40 @@ php artisan test
 
 - Laravel Dusk (UI tests):
 
-O Dusk foi adicionado ao projeto, mas o download automático do ChromeDriver falhou no ambiente atual por causa de verificação SSL no cURL.
+- Laravel Dusk (UI tests):
 
-Opções para usar Dusk:
+  O Dusk foi adicionado ao projeto, mas o download automático do ChromeDriver falhou no ambiente atual por causa de verificação SSL no cURL. A seguir há instruções para configurar localmente e um script auxiliar recomendado.
 
-1. Baixe manualmente o ChromeDriver compatível com sua versão do Chrome:
-   - https://googlechromelabs.github.io/chrome-for-testing/
-   - Coloque o binário em um local, por exemplo `C:\chromedriver\chromedriver.exe` (Windows) ou `/usr/local/bin/chromedriver` (Unix).
+  Opções para usar Dusk:
 
-2. Configure a variável de ambiente para apontar ao binário (PowerShell exemplo):
+  1) Manual (recomendado no Windows):
+     - Baixe o Chrome for Testing compatível com sua versão do Chrome: https://googlechromelabs.github.io/chrome-for-testing/
+     - Extraia o binário e coloque em um local, por exemplo `C:\chromedriver\chromedriver.exe`.
+     - Atualize `.env` ou exporte a variável de ambiente `DUSK_CHROME_DRIVER_PATH` apontando para o binário:
 
-```powershell
-$env:DUSK_CHROME_DRIVER_PATH = 'C:\chromedriver\chromedriver.exe'
-php artisan dusk
-```
+     PowerShell (temporário):
+     ```powershell
+     $env:DUSK_CHROME_DRIVER_PATH = 'C:\chromedriver\chromedriver.exe'
+     php artisan dusk
+     ```
 
-3. Ou corrija/carrege o CA para permitir download automático (se preferir que `php artisan dusk:install` baixe o driver).
+     Ou permanentemente em Windows (PowerShell):
+     ```powershell
+     [Environment]::SetEnvironmentVariable('DUSK_CHROME_DRIVER_PATH', 'C:\chromedriver\chromedriver.exe', 'User')
+     ```
 
-Após isso, execute:
+  2) Script auxiliar (linha de comando):
+     - Se preferir, eu posso adicionar um script para baixar automaticamente o ChromeDriver compatível (mas o download pode falhar se o CA local estiver quebrado). Se quiser, eu posso tentar executar o download aqui ou adicionar o script para você executar localmente.
 
-```bash
-php artisan dusk
-```
+  3) Corrigir CA/SSL: se preferir o `php artisan dusk:install` baixar automaticamente, corrija o CA do sistema para permitir conexões TLS válidas — isso depende do seu SO.
+
+  Após apontar `DUSK_CHROME_DRIVER_PATH` para o binário, execute:
+
+  ```bash
+  php artisan dusk
+  ```
+
+  Observação: adicionei em `.env.example` a variável `DUSK_CHROME_DRIVER_PATH` como placeholder para facilitar configuração.
 
 ## CI
 
