@@ -14,6 +14,7 @@ class ExampleTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        // Home redirects to the expenses page
+        $response->assertRedirect('/gastos');
     }
 }
